@@ -1,7 +1,11 @@
 public class start {
 
-	public static void main(String[] args){
-		Home h = new Home();
-		h.setVisible(true);
+	public static void main(String[] args) {
+		showLoginScreen();
+	}
+	
+	public static void showLoginScreen(){
+		LogIn screen = new LogIn();
+		screen.setVisible(true);
 	}
 }
