@@ -19,6 +19,8 @@ public class Home extends JFrame {
 	JFrame frame = new JFrame("Vocatone");
 	JPanel panelOne = new JPanel();
 	JPanel panelTwo = new JPanel();
+	JPanel panelThree = new JPanel();
+
 	JLabel label2 = new JLabel("VOCATONE");
 	JButton playListButton = new JButton("PLAYLIST");
 	JButton playButton = new JButton("PLAY");
@@ -37,6 +39,7 @@ public class Home extends JFrame {
 
 	AudioInputStream audioInputStream;
 	Long currentFrame;
+	String currentFilePath;
 
 	private String songs[] = { "BabyElephantWalk60.wav", "CantinaBand3.wav",
 			"CantinaBand60.wav", "CantinaBand60.wav",
@@ -44,6 +47,10 @@ public class Home extends JFrame {
 			"Linkin_Park_-_In_the_End", "Linkin_Park_-_Numb",
 			"NEFFEX_-_Best_of_Me", "PSY_feat._SUGA_-_That_That",
 			"RISE", "Starset_MyDemons" };
+
+	private String posters[] = {
+			"Bad_decision.jpg", "Best_of_Me_Neffex.jpeg"
+	};
 
 	Home() {
 
@@ -57,21 +64,31 @@ public class Home extends JFrame {
 		configurePreviousButton();
 		configureLikeButton();
 		configureLabelOne();
-		configureLabelTwo();
+		// configureLabelTwo();
+		configurePanelThree();
 		configureFrameUI();
 	}
 
 	void configureFrameUI() {
-		panelTwo.add(playButton);
-		panelTwo.add(nextButton);
-		panelTwo.add(previousButton);
-		panelTwo.add(likeButton);
+
+		/// upper buttons
 		panelOne.add(playListButton);
 		panelOne.add(idButton);
 		panelOne.add(label2);
+
+		// poster
+		panelTwo.add(label1);
+
+		// lower buttons
+
+		panelOne.add(playButton);
+		panelThree.add(nextButton);
+		panelThree.add(previousButton);
+		panelThree.add(likeButton);
+
 		frame.add(panelOne);
 		frame.add(panelTwo);
-		panelTwo.add(label1);
+		frame.add(panelThree);
 		frame.setVisible(true);
 	}
 
@@ -93,6 +110,23 @@ public class Home extends JFrame {
 		panelOne.setLayout(null);
 	}
 
+	void configurePanelTwo() {
+		panelTwo.setBackground(new Color(0x373538));
+		JLabel label = new JLabel(); // JLabel Creation
+		label.setIcon(new ImageIcon("/posters/Bad_decision.jpg")); // Sets the image to be displayed as an icon
+
+		panelTwo.setBounds(0, 60, 800, 520);
+		panelTwo.setVisible(true);
+		panelTwo.setLayout(null);
+
+	}
+
+	void configurePanelThree() {
+		panelTwo.setBounds(0, 420, 800, 80);
+		panelTwo.setVisible(true);
+		panelTwo.setLayout(null);
+	}
+
 	void configurePlayListButton() {
 		Icon icon = new ImageIcon(
 				"C:\\Users\\Asus\\Desktop\\Java Project\\Vocatone\\image\\playlist_st6rh80d4hw3_16.png");
@@ -102,20 +136,11 @@ public class Home extends JFrame {
 		// playListButton.setBorder(new RoundedBorder(20));
 	}
 
-	void configurePanelTwo() {
-		panelTwo.setBackground(new Color(0x373538));
-		// panelOne.setPreferredSize(new Dimension(500,600));
-		panelTwo.setBounds(0, 58, 800, 558);
-		panelTwo.setVisible(true);
-		panelTwo.setLayout(null);
-
-	}
-
 	void configurePlayButton() {
 		Icon icon2 = new ImageIcon("G:\\Vocatone\\image\\play.png");
 		playButton.setIcon(icon2);
 		playButton.setBorder(new RoundedBorder(50));
-		playButton.setBounds(229, 470, 150, 42);
+		playButton.setBounds(229, 30, 150, 40);
 		playButton.setFocusable(false);
 		playButton.setBorder(new RoundedBorder(50));
 
@@ -129,10 +154,10 @@ public class Home extends JFrame {
 				} else {
 					if (currenFileIndex >= 0 && currenFileIndex < songs.length) {
 
-						var currentFileLocation = "music/" + songs[currenFileIndex];
+						currentFilePath = "music/" + songs[currenFileIndex];
 						try {
 
-							playAudioFile(currentFileLocation);
+							play(currentFilePath);
 
 						} catch (Exception ex) {
 							System.out.println(ex.getMessage());
@@ -179,7 +204,7 @@ public class Home extends JFrame {
 	}
 
 	void configureLikeButton() {
-		Icon icon5 = new ImageIcon("C:\\Users\\Asus\\Desktop\\Java Project\\Vocatone\\image\\love_jmfu4w9u80ez_16.png");
+		Icon icon5 = new ImageIcon("/posters/Bad_decision.jpg");
 		likeButton.setIcon(icon5);
 		likeButton.setBounds(424, 450, 30, 33);
 		likeButton.setFont(new Font("Arial", Font.BOLD, 8));
@@ -189,9 +214,9 @@ public class Home extends JFrame {
 	}
 
 	void configureLabelOne() {
-		Icon icon6 = new ImageIcon("G:\\Vocatone\\image\\Castle_Of_Glass.jpeg");
+		Icon icon6 = new ImageIcon("/posters/Bad_decision.jpg");
 		label1 = new JLabel(icon6);
-		label1.setBounds(115, 28, 274, 380);
+		label1.setBounds(115, 28, 300, 300);
 		label1.setFont(new Font("Arial", Font.BOLD, 15));
 		label1.setBorder(new RoundedBorder(25));
 		label1.setOpaque(true);
@@ -210,7 +235,7 @@ public class Home extends JFrame {
 		label2.setFont(new Font("Arial", Font.BOLD, 15));
 	}
 
-	public void playAudioFile(String fileName)
+	public void play(String fileName)
 			throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		File file = new File(fileName);
 		System.out.println(file.getAbsolutePath());
@@ -230,6 +255,60 @@ public class Home extends JFrame {
 		this.currentFrame = this.clip.getMicrosecondPosition();
 		clip.stop();
 		status = "paused";
+	}
+
+	public void resume() throws UnsupportedAudioFileException,
+			IOException, LineUnavailableException {
+		if (status.equals("play")) {
+			System.out.println("Audio is already " +
+					"being played");
+			return;
+		}
+		clip.close();
+		resetAudioStream();
+		clip.setMicrosecondPosition(currentFrame);
+		this.play(this.currentFilePath);
+	}
+
+	// Method to restart the audio
+	public void restart() throws IOException, LineUnavailableException,
+			UnsupportedAudioFileException {
+		clip.stop();
+		clip.close();
+		resetAudioStream();
+		currentFrame = 0L;
+		clip.setMicrosecondPosition(0);
+		this.play(this.currentFilePath);
+	}
+
+	// Method to stop the audio
+	public void stop() throws UnsupportedAudioFileException,
+			IOException, LineUnavailableException {
+		currentFrame = 0L;
+		clip.stop();
+		clip.close();
+	}
+
+	// Method to jump over a specific part
+	public void jump(long c) throws UnsupportedAudioFileException, IOException,
+			LineUnavailableException {
+		if (c > 0 && c < clip.getMicrosecondLength()) {
+			clip.stop();
+			clip.close();
+			resetAudioStream();
+			currentFrame = c;
+			clip.setMicrosecondPosition(c);
+			this.play(this.currentFilePath);
+		}
+	}
+
+	// Method to reset audio stream
+	public void resetAudioStream() throws UnsupportedAudioFileException, IOException,
+			LineUnavailableException {
+		audioInputStream = AudioSystem.getAudioInputStream(
+				new File(currentFilePath).getAbsoluteFile());
+		clip.open(audioInputStream);
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 
 }
